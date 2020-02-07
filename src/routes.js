@@ -1,11 +1,11 @@
 const { Router } = require("express");
-const routes = Router();
-const controllersUser = require("./controllers/user");
+const routes = Router()
+const controllersUsers = require("./controllers/user");
 
-routes.get("/", controllersUser.index);
-routes.post("/");
-routes.delete("/:id");
-routes.put("/:id");
-routes.get("/show/:id");
+routes.get("/", controllersUsers.index);
+routes.post("/", controllersUsers.store);
+routes.put("/:id", controllersUsers.update);
+routes.delete("/:id", controllersUsers.destroy);
+routes.get("/:id", controllersUsers.show);
 
 module.exports = routes
