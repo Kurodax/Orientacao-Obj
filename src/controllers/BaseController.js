@@ -1,0 +1,115 @@
+const { Router } = require('express');
+
+class BaseController {
+  constructor(path, array) {
+    this.path = path;
+    this.array = array;
+  }
+
+  index(req, res) {
+    return res.status(200).json({
+      messages: 'All in Array',
+      response: this.array,
+    });
+  }
+
+  show(req, res) {
+    const show = this.array.find((value) => value.id.toString() === req.params.id.toString());
+    if (!show) {
+      return res.status(500).json({
+        messages: 'ID not found',
+      });
+    }
+    return res.status(200).json({
+      messages: 'Successfully found item',
+      response: show,
+    });
+  }
+
+  store(req, res) {
+    const {
+      id, name, username, password, email, phone, strett, number, zipcode, district, state, country,
+    } = req.body;
+    if (strett) {
+      this.array.push({
+        id,
+        strett,
+        number,
+        zipcode,
+        district,
+        state,
+        country,
+      });
+    } else {
+      this.array.push({
+        id,
+        name,
+        username,
+        password,
+        email,
+        phone,
+
+      });
+    }
+    return res.status(200).json({
+      messages: 'successfully included',
+      response: this.array,
+    });
+  }
+
+  update(req, res) {
+    const updateShow = this.array.find((value) => value.id.toString() === req.params.id);
+    if (!updateShow) {
+      return res.status(500).json({
+        messages: 'ID not found',
+      });
+    }
+    const {
+      name, username, password, email, phone,
+    } = req.body;
+
+    this.array.forEach((item) => {
+      if (item.id === req.params.id.toString()) {
+        item.name = name;
+        item.username = username;
+        item.password = password;
+        item.email = email;
+        item.phone = phone;
+      }
+    });
+    return res.json({
+      messages: 'updated successfully',
+      response: this.array,
+    });
+  }
+
+  destroy(req, res) {
+    const destroyShow = this.array.find((value) => value.id.toString() === req.params.id);
+    if (!destroyShow) {
+      return res.status(500).json({
+        messages: 'ID not found',
+      });
+    }
+    const pos = this.array.findIndex((value, index) => {
+      if (value.id === req.params.id.toString()) return index;
+    });
+    this.array.splice(pos, 1);
+    return res.json({
+      messages: 'successfully deleted',
+      response: this.array,
+    });
+  }
+
+  routes() {
+    const routes = Router();
+
+    routes.get(this.path, this.index.bind(this));
+    routes.get(`${this.path}/:id`, this.show.bind(this));
+    routes.post(this.path, this.store.bind(this));
+    routes.put(`${this.path}/:id`, this.update.bind(this));
+    routes.delete(`${this.path}/:id`, this.destroy.bind(this));
+
+    return routes;
+  }
+}
+module.exports = BaseController;

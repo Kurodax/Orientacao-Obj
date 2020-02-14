@@ -1,29 +1,24 @@
-class ListController {
+const BaseController = require('./BaseController');
 
-    index(req, res) {
-        res.json({
-            messages: "Get OK"
-        })
-    }
-    store(req, res) {
-        res.json({
-            messages: "Post OK"
-        })
-    }
-    update(req, res) {
-        res.json({
-            messages: "Put OK"
-        })
-    }
-    destroy(req, res) {
-        res.json({
-            messages: "Delete OK"
-        })
-    }
-    show(req, res) {
-        res.json({
-            messages: "Show OK"
-        })
-    }
+const ArrayUser = require('../models/users');
+
+class UsersController extends BaseController {
+  constructor() {
+    super('/users', ArrayUser);
+  }
+
+  auth(req, res) {
+    res.json({
+      messages: 'Auth OK',
+    });
+  }
+
+  routes() {
+    const routes = super.routes();
+
+    routes.post('/auth', this.auth.bind(this));
+
+    return routes;
+  }
 }
-module.exports = new ListController()
+module.exports = new UsersController();

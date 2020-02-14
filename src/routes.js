@@ -1,11 +1,9 @@
-const { Router } = require("express");
-const routes = Router()
-const controllersUsers = require("./controllers/user");
+const controllersUsers = require('./controllers/user');
+const controllersAddress = require('./controllers/address');
 
-routes.get("/", controllersUsers.index);
-routes.post("/", controllersUsers.store);
-routes.put("/:id", controllersUsers.update);
-routes.delete("/:id", controllersUsers.destroy);
-routes.get("/:id", controllersUsers.show);
+const routes = [
+  controllersUsers.routes(),
+  controllersAddress.routes(),
+];
 
-module.exports = routes
+module.exports = routes;
